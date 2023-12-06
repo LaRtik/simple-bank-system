@@ -50,7 +50,7 @@ class CreateCreditView(LoginRequiredMixin, CreateView):
     model = Transaction
     form_class = CreateCreditForm
     template_name = 'open_credit.html'
-    success_url = reverse_lazy('bank-account')
+    success_url = reverse_lazy('bank_accounts')
 
     def form_valid(self, form):
         form.instance.credit = form.cleaned_data['credit']
