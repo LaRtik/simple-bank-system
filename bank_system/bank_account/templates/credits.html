@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<br>
+<h2>Your credits</h2>
+<br>
+{% if credits %}
+{% for credit in credits %}
+<div>
+    <p>Credit: {{ credit.credit }}</p>
+    <p>Bank account: {{ credit.bank_account }}</p>
+    <p>Status: {{ credit.status }}</p>
+    <p>Amount: {{ credit.amount }}</p>
+    <p>Period in month: {{ credit.credit.period_in_month }}</p>
+    <p>Percent at year: {{ credit.credit.percent }}</p>
+</div>
+<br>
+{% endfor %}
+{% else %}
+<h4> It's poor to see that you have no credits yet =(</h4>
+{% endif %}
+
+
+<a href="{% url 'open_credit' %}">Open new application for a credit</a>
+{% endblock %}

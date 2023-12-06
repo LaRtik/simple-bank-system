@@ -1,7 +1,6 @@
 from django import forms
-from bank_account.models import BankAccount, Currency, CreditCardType, CreditCard
+from bank_account.models import BankAccount
 
-from transaction.models import TransactionType, Transaction
 
 from credit.models import UserCredit
 

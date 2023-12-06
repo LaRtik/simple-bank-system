@@ -1,27 +1,15 @@
 import datetime
 import random
 
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render
 from bank_account.forms import MakeBankAccountForm, MakeCreditCardForm
 from django.urls import reverse_lazy
 from django.views.generic.edit import CreateView, View
-from bank_account.models import BankAccount, CreditCard, BankPartner
+from bank_account.models import BankAccount, CreditCard
 
 from transaction.models import Transaction
 from bank_account.models import BankAccount, CreditCard
 from accounts.utils import LoginConfirmedRequiredMixin
-
-
-class BankAccountView(LoginConfirmedRequiredMixin, View):
-    def get(self, request, *args, **kwargs):
-        bank_accounts = BankAccount.objects.filter(user=request.user)
-        credit_cards = CreditCard.objects.filter(bank_account__user=request.user)
-        context = {
-            'bank_accounts': bank_accounts,
-            'credit_cards': credit_cards
-        }
-        return render(request, 'bank_account/base.html', context)
 
 
 class MyBankAccountView(View):
@@ -30,16 +18,20 @@ class MyBankAccountView(View):
         context = {
             'bank_accounts': bank_accounts,
         }
-        return render(request, 'bank_account/my_bank_account.html', context)
+        return render(request, 'bank_accounts.html', context)
 
 
 class MyCreditCardView(View):
     def get(self, request, *args, **kwargs):
         credit_cards = CreditCard.objects.filter(bank_account__user=request.user)
+        for card in credit_cards:
+            card.number = str(card.number)
+            card.number = card.number[0:4] + ' ' + card.number[4:8] + ' ' + card.number[8:12] + ' ' + card.number[12:16]
+
         context = {
             'credit_cards': credit_cards
         }
-        return render(request, 'bank_account/my_credit_card.html', context)
+        return render(request, 'credit_cards.html', context)
 
 
 class MyTransactionView(View):
@@ -48,32 +40,29 @@ class MyTransactionView(View):
         context = {
             'transactions': transactions
         }
-        return render(request, 'bank_account/my_transaction.html', context)
+        return render(request, 'transactions.html', context)
 
 
 class MakeBankAccount(LoginConfirmedRequiredMixin, CreateView):
     model = BankAccount
     form_class = MakeBankAccountForm
-    success_url = reverse_lazy('my-bank-account')
-    template_name = 'bank_account/make_bank_account.html'
+    success_url = reverse_lazy('bank_accounts')
+    template_name = 'create_bank_account.html'
 
     def form_valid(self, form):
         form.instance.user = self.request.user
-        form.instance.name = int(str(random.randint(1000, 9999)) + str(self.request.user.id))
+        # form.instance.name = int(str(random.randint(1000, 9999)) + str(self.request.user.id))
         return super().form_valid(form)
 
 
 class MakeCreditCard(LoginConfirmedRequiredMixin, CreateView):
     model = CreditCard
     form_class = MakeCreditCardForm
-    success_url = reverse_lazy('my-credit-card')
-    template_name = 'bank_account/make_credit_card.html'
+    success_url = reverse_lazy('credit_cards')
+    template_name = 'create_credit_card.html'
 
     def form_valid(self, form):
-        form.instance.number = random.randint(100, 999)
         form.instance.cvv = random.randint(100, 999)
-        form.instance.date_to = datetime.date.today() + datetime.timedelta(days=365*3 + 366)
-        form.instance.owner_name = form.cleaned_data['owner_name'].upper()
         return super().form_valid(form)
 
     def get_form_kwargs(self):
@@ -81,14 +70,6 @@ class MakeCreditCard(LoginConfirmedRequiredMixin, CreateView):
         kwargs['user'] = self.request.user
         return kwargs
 
-
-class PartnerView(View):
-    def get(self, request, *args, **kwargs):
-        bank_partners = BankPartner.objects.all()
-        context = {
-            'bank_partners': bank_partners,
-        }
-        return render(request, 'bank_account/partner.html', context)
 
 
 class AboutUsView(View):

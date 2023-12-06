@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<header>
+	<a href="{% url 'bank_accounts' %}">Bank accounts</a>
+	<a href="{% url 'credit_cards' %}">Credit cards</a>
+	<a href="{% url 'transactions' %}">Transactions</a>
+	<a href="{% url 'credits' %}">Credits</a>
+</header>
+{% endblock %}

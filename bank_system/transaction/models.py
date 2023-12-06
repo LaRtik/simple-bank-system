@@ -3,13 +3,6 @@ from django.db import models
 from bank_account.models import CreditCard
 
 
-class TransactionType(models.Model):
-    type = models.CharField(primary_key=True, max_length=255)
-    description = models.TextField(max_length=255)
-
-    def __str__(self):
-        return self.type
-
 
 class TransactionStatus(models.Model):
     type = models.CharField(primary_key=True, max_length=255)
@@ -21,7 +14,6 @@ class TransactionStatus(models.Model):
 
 class Transaction(models.Model):
     dt = models.DateTimeField()
-    transaction_type = models.ForeignKey(TransactionType, on_delete=models.CASCADE)
     value = models.DecimalField(max_digits=12, decimal_places=2, default=0)
     credit_card_from = models.ForeignKey(CreditCard, on_delete=models.CASCADE, related_name='card_from')
     credit_card_to = models.ForeignKey(CreditCard, on_delete=models.CASCADE, related_name='card_to')

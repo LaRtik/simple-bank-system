@@ -4,13 +4,6 @@ from bank_account.models import BankAccount
 COUNT = 0
 
 
-class CreditType(models.Model):
-    type = models.CharField(max_length=255)
-    description = models.CharField(max_length=255)
-
-    def __str__(self):
-        return self.type
-
 
 class Credit(models.Model):
     name = models.CharField(max_length=255)
@@ -19,24 +12,16 @@ class Credit(models.Model):
     min_amount = models.DecimalField(max_digits=12, decimal_places=2)
     max_amount = models.DecimalField(max_digits=12, decimal_places=2)
     percent = models.IntegerField()
-    type = models.ForeignKey(CreditType, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
 
-
-class CreditStatus(models.Model):
-    name = models.CharField(max_length=255)
-    description = models.CharField(max_length=255)
-
-    def __str__(self):
-        return self.name
 
 
 class UserCredit(models.Model):
     credit = models.ForeignKey(Credit, on_delete=models.CASCADE)
     bank_account = models.ForeignKey(BankAccount, on_delete=models.CASCADE)
-    status = models.ForeignKey(CreditStatus, on_delete=models.CASCADE)
+    status = models.CharField(max_length=2, choices=[("OK", "Approved"), ("NO", "Denied"), ("W8", "In progress")])
     amount = models.DecimalField(max_digits=12, decimal_places=2)
 
     def __str__(self):
@@ -45,7 +30,7 @@ class UserCredit(models.Model):
     def save(self, *args, **kwargs):
         global COUNT
 
-        if self.status.name == 'Одобрено' and not COUNT:
+        if self.status == 'OK' and not COUNT:
             COUNT += 1
             self.bank_account.balance += self.amount
             self.bank_account.save()

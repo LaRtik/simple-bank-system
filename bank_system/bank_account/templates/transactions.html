@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<br>
+<h2>Your transactions</h2>
+<br>
+{% if transactions %}
+{% for transaction in transactions %}
+<div>
+    <p>Date: {{ transaction.dt }}</p>
+    <p>Value: {{ transaction.value }}</p>
+    <p>From: {{ transaction.credit_card_from }}</p>
+    <p>To: {{ transaction.credit_card_to }}</p>
+    <p>Transaction status: {{ transaction.transaction_status }}</p>
+</div>
+<br>
+{% endfor %}
+{% else %}
+<h4> It's poor to see that you have no transactions yet =(</h4>
+<a href="{% url 'create_transaction' %}">Make new transaction between credit card</a>
+{% endif %}
+{% endblock %}

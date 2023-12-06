@@ -1,11 +1,11 @@
 from django import forms
-from bank_account.models import BankAccount, Currency, CreditCardType, CreditCard
+from bank_account.models import BankAccount, CreditCard
 
-from transaction.models import TransactionType, Transaction
+from transaction.models import Transaction
 
 
 class MoneyTransferForm(forms.ModelForm):
-    credit_card_to = forms.CharField(max_length=16)
+    credit_card_to = forms.CharField(max_length=20)
 
     class Meta:
         model = Transaction

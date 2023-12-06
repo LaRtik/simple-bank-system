@@ -5,8 +5,6 @@ from django.contrib import messages
 from django.contrib.auth import login, authenticate, logout
 from accounts.forms import LoginForm, RegisterForm
 from django.views.generic.edit import View
-from bank_account.models import CurrencyRelation
-from bank_account.models import CurrencyRelation
 from hashlib import sha256
 import hmac
 from accounts.utils import verify_telegram_authentication
@@ -24,11 +22,7 @@ class Index(View):
             if not request.user.confirmed:
                 return redirect('await_confirm')
             
-        currency_relations = CurrencyRelation.objects.all()
-        context = {
-            'currency_relations': currency_relations
-        }
-        return render(request, 'users/index.html', context=context)
+        return render(request, 'users/index.html')
 
 
 def sign_up(request):

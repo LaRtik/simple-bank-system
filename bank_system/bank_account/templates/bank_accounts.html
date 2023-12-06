@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Your bank accounts</h2>
+{% if bank_accounts %}
+{% for bank_account in bank_accounts %}
+<div>
+	<p>Account: {{ bank_account.name }} [{{ bank_account.id }}]</p>
+	<p>Balance: {{ bank_account.balance }}</p>
+	<br>
+</div>
+{% endfor %}
+{% else %}
+<h4> It's poor to see that you have no open bank accounts yet =(</h4>
+{% endif %}
+<br>
+<a href="{% url 'create_bank_account' %}">Create new bank account</a>
+
+{% endblock content %}

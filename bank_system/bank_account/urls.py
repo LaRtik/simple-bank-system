@@ -3,7 +3,6 @@ from transaction.views import MoneyTransferView
 from bank_account.views import (
     MakeBankAccount,
     MakeCreditCard,
-    BankAccountView,
     MyBankAccountView,
     MyCreditCardView,
     MyTransactionView,
@@ -11,13 +10,13 @@ from bank_account.views import (
 from credit.views import CreateCreditView, MyCreditView
 
 urlpatterns = [
-    path('', BankAccountView.as_view(), name='bank-account'),
-    path('my-bank-account/', MyBankAccountView.as_view(), name='my-bank-account'),
-    path('my-account/make-bank-account/', MakeBankAccount.as_view(), name='make-bank-account'),
-    path('my-credit-card/', MyCreditCardView.as_view(), name='my-credit-card'),
-    path('my-credit-card/make-credit-card/', MakeCreditCard.as_view(), name='make-credit-card'),
-    path('my-transaction/', MyTransactionView.as_view(), name='my-transaction'),
-    path('my-transaction/make-transaction/', MoneyTransferView.as_view(), name='make-transaction'),
-    path('my-credit/', MyCreditView.as_view(), name='my-credit'),
-    path('my-credit/make-credit/', CreateCreditView.as_view(), name='make-credit'),
+	path('', MyBankAccountView.as_view(), name='bank_accounts'),
+    path('bank_accounts/', MyBankAccountView.as_view(), name='bank_accounts'),
+    path('create_bank_account/', MakeBankAccount.as_view(), name='create_bank_account'),
+    path('credits_cards/', MyCreditCardView.as_view(), name='credit_cards'),
+    path('create_credit_card/', MakeCreditCard.as_view(), name='create_credit_card'),
+    path('transactions/', MyTransactionView.as_view(), name='transactions'),
+    path('create_transaction/', MoneyTransferView.as_view(), name='create_transaction'),
+    path('credits/', MyCreditView.as_view(), name='credits'),
+    path('open_credit/', CreateCreditView.as_view(), name='open_credit'),
 ]

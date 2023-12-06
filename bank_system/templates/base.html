@@ -1,46 +1,36 @@
 {%load static %}
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>My Site</title>
-  </head>
-  <body>
-  	<header>
-  		{% if request.user.is_authenticated and request.user.telegram_id != 0 and request.user.confirmed %}
-  			<span>Hi {{ request.user.username | title }}</span>
-  			<a href="{% url 'logout' %}">Logout</a>
-            <a href="{% url 'bank-account' %}">Your cabinet</a>
-            <a href="{% url 'about_us' %}">О нас</a>
-  		{% else %}
-  			<a href="{% url 'login' %}">Login</a>
-            <a href="{% url 'bank-account' %}">Your bank accounts</a>
-  		{% elif request.user.is_authenticated %}
-		  	<span>Hi {{ request.user.username | title }}. Please, verify your identity.</span>
-			<a href="{% url 'logout' %}">Logout</a>
+
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>My Site</title>
+</head>
+
+<body>
+	<header>
+		{% if request.user.is_authenticated and request.user.telegram_id != 0 and request.user.confirmed %}
+		<span>Hi {{ request.user.username | title }}</span>
+		<a href="{% url 'logout' %}">Logout</a>
+		<br>
+		<br>
+		<a href="{% url 'bank_accounts' %}">Bank accounts</a>
+		<a href="{% url 'credit_cards' %}">Credit cards</a>
+		<a href="{% url 'transactions' %}">Transactions</a>
+		<a href="{% url 'credits' %}">Credits</a>
+		{% elif request.user.is_authenticated %}
+		<span>Hi {{ request.user.username | title }}. Please, verify your identity.</span>
+		<a href="{% url 'logout' %}">Logout</a>
 		{% else %}
-			<a href="{% url 'login' %}">Login</a>
-  			<a href="{% url 'register' %}">Register</a>
-            <a href="{% url 'about_us' %}">О нас</a>
-  		{% endif %}
-  	</header>
-    <h1>Текущий курс валют</h1>
-    <table>
-        <tr>
-            <th>Валюта</th>
-            <th>Курс покупки</th>
-            <th>Курс продажи</th>
-        </tr>
-        {% for currency_relation in currency_relations %}
-        <tr>
-            <td>{{ currency_relation.currency_from }}\{{ currency_relation.currency_to }}</td>
-            <td>{{ currency_relation.coefficient_buy }}</td>
-            <td>{{ currency_relation.coefficient_sell }}</td>
-        </tr>
-        {% endfor %}
-    </table>
-  		<main>
+		<a href="{% url 'login' %}">Login</a>
+		<a href="{% url 'register' %}">Register</a>
+		{% endif %}
+		<br>
+		<br>
+		<a href="{% url 'about_us' %}">About us</a>
+	</header>
+	<main>
 		{% if messages %}
 		<div class="messages">
 			{% for message in messages %}
