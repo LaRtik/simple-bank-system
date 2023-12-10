@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'bank_account.apps.BankAccountConfig',
     'transaction.apps.TransactionConfig',
     'credit.apps.CreditConfig',
+    'django_celery_beat',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -130,4 +131,4 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-PROXY_DOMAIN_URL = "http://floppy-signs-punch.loca.lt"
+PROXY_DOMAIN_URL = "http://tricky-geckos-guess.loca.lt"
