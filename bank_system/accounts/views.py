@@ -9,6 +9,7 @@ from hashlib import sha256
 import hmac
 from accounts.utils import verify_telegram_authentication
 from accounts.models import User
+from bank_account.models import CurrencyRelation
 
 TELEGRAM_BOT_TOKEN = '6510492757:AAGSxkG85ynW3C4EFN0bKjIvFedE_0kIKRE'
 
@@ -21,8 +22,13 @@ class Index(View):
                 return redirect('register_telegram')
             if not request.user.confirmed:
                 return redirect('await_confirm')
-            
-        return render(request, 'users/index.html')
+        
+
+        currency_relations = CurrencyRelation.objects.all()
+        context = {
+            'currency_relations': currency_relations
+        }
+        return render(request, 'users/index.html', context=context)
 
 
 def sign_up(request):

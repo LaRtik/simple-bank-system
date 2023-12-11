@@ -10,7 +10,7 @@ class User(AbstractUser):
     telegram_id = models.BigIntegerField()
     confirmed = models.BooleanField(default=False)
 
-    REQUIRED_FIELDS = ["first_name", "second_name", "telegram_id"]
+    REQUIRED_FIELDS = ["first_name", "last_name", "telegram_id"]
     
 
 

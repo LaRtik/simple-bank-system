@@ -5,7 +5,7 @@
 {% if bank_accounts %}
 {% for bank_account in bank_accounts %}
 <div>
-	<p>Account: {{ bank_account.name }} [{{ bank_account.id }}]</p>
+	<p>Account:[{{ bank_account.currency }}] {{ bank_account.name }} [{{ bank_account.id }}]</p>
 	<p>Balance: {{ bank_account.balance }}</p>
 	<br>
 </div>

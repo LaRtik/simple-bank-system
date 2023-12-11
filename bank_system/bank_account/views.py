@@ -7,7 +7,7 @@ from django.urls import reverse_lazy
 from django.views.generic.edit import CreateView, View
 from bank_account.models import BankAccount, CreditCard
 
-from transaction.models import Transaction
+from transaction.models import CardTransaction, BankAccountTransaction
 from bank_account.models import BankAccount, CreditCard
 from accounts.utils import LoginConfirmedRequiredMixin
 
@@ -36,9 +36,11 @@ class MyCreditCardView(View):
 
 class MyTransactionView(View):
     def get(self, request, *args, **kwargs):
-        transactions = Transaction.objects.filter(credit_card_from__bank_account__user=request.user)
+        transactions_card = CardTransaction.objects.filter(credit_card_from__bank_account__user=request.user)
+        transactions_account = BankAccountTransaction.objects.filter(bank_account_from__user=request.user)
         context = {
-            'transactions': transactions
+            'transactions_card': transactions_card,
+            'transactions_account': transactions_account
         }
         return render(request, 'transactions.html', context)
 

@@ -9,8 +9,8 @@
     <p>Number: {{ credit_card.number }}</p>
     <p>Owner name: {{ credit_card.owner_name }}</p>
     <p>Date: {{ credit_card.date_to }}</p>
-    <p>Cvv: {{ credit_card.cvv }}</p>
-    <p>Bank account: {{ credit_card.bank_account }} [{{ credit_card.bank_account.id }}]</p>
+    <p>CVV: ***</p>
+    <p>Bank account: [{{ credit_card.bank_account.currency }}] {{ credit_card.bank_account }} [{{ credit_card.bank_account.id }}]</p>
 </div>
 <br>
 {% endfor %}

@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<p>Your credit transactions</p>
+    <table>
+        <tr>
+            <th>Payment date</th>
+            <th>To pay</th>
+        </tr>
+
+        {% for credit_transaction in payments %}
+            <tr>
+                <td>{{ credit_transaction.dt }}</td>
+                <td>{{ credit_transaction.amount }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+
+{% endblock %}

@@ -8,7 +8,7 @@ from bank_account.utils import generate_card_number
 class MakeBankAccountForm(forms.ModelForm):
     class Meta:
         model = BankAccount
-        fields = ['name']
+        fields = ['name', 'currency']
 
 
 class MakeCreditCardForm(forms.ModelForm):

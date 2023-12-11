@@ -2,10 +2,8 @@
 
 {% block content %}
 <br>
-<h2>Your transactions</h2>
-<br>
-{% if transactions %}
-{% for transaction in transactions %}
+<h2>Card transactions</h2>
+{% for transaction in transactions_card %}
 <div>
     <p>Date: {{ transaction.dt }}</p>
     <p>Value: {{ transaction.value }}</p>
@@ -15,8 +13,20 @@
 </div>
 <br>
 {% endfor %}
-{% else %}
+<h2>Bank account transactions</h2>
+{% for transaction in transactions_account %}
+<div>
+    <p>Date: {{ transaction.dt }}</p>
+    <p>Value: {{ transaction.value }}</p>
+    <p>From: {{ transaction.bank_account_from }} [{{ transaction.bank_account_from.id }}]</p>
+    <p>To: {{ transaction.bank_account_to }} [{{ transaction.bank_account_to.id }}] - {{ transaction.bank_account_to.user.first_name }} {{ transaction.bank_account_to.user.last_name }}</p>
+    <p>Transaction status: {{ transaction.transaction_status }}</p>
+</div>
+<br>
+{% endfor %}
 <h4> It's poor to see that you have no transactions yet =(</h4>
-<a href="{% url 'create_transaction' %}">Make new transaction between credit card</a>
-{% endif %}
+<a href="{% url 'create_card_transaction' %}">Make new transaction between credit cards</a>
+<br>
+<br>
+<a href="{% url 'create_account_transaction' %}">Make new transaction between bank accounts</a> 
 {% endblock %}

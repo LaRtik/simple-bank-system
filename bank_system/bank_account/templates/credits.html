@@ -8,12 +8,14 @@
 {% if credits %}
 {% for credit in credits %}
 <div>
-    <p>Credit: {{ credit.credit }}</p>
-    <p>Bank account: {{ credit.bank_account }}</p>
+    <p>Credit: [{{ credit.bank_account.currency }}] {{ credit.credit }}</p>
+    <p>Bank account: {{ credit.bank_account }} [{{ credit.bank_account.id }}]</p>
     <p>Status: {{ credit.status }}</p>
-    <p>Amount: {{ credit.amount }}</p>
+    <p>Amount: {{ credit.amount }} {{ credit.bank_account.currency }}</p>
     <p>Period in month: {{ credit.credit.period_in_month }}</p>
     <p>Percent at year: {{ credit.credit.percent }}</p>
+    <a href="{% url 'credit_transactions' credit.id %}">Details</a>
+    <a href="{% url 'edit_credit' credit.id %}">Edit</a>
 </div>
 <br>
 {% endfor %}

@@ -5,14 +5,18 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views import View
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView, UpdateView
+from django.views.generic.detail import DetailView
+from bank_account.models import BankAccount
+from django.contrib import messages
+from accounts.utils import LoginConfirmedRequiredMixin
 
-from transaction.models import Transaction
+from transaction.models import CardTransaction
 
 
-from credit.forms import CreateCreditForm
+from credit.forms import CreateCreditForm, EditCreditForm
 
-from credit.models import CreditTransaction
+from credit.models import Credit, CreditTransaction
 
 from credit.models import UserCredit
 
@@ -46,20 +50,34 @@ class MyCreditView(View):
         return render(request, 'credits.html', context)
 
 
-class CreateCreditView(LoginRequiredMixin, CreateView):
-    model = Transaction
+class CreditView(View):
+    def get(self, request, *args, **kwargs):
+        credits = Credit.objects.all()
+        context = {
+            'credits': credits
+        }
+        return render(request, 'available_credits.html', context)
+
+
+class CreateCreditView(LoginConfirmedRequiredMixin, CreateView):
+    model = CardTransaction
     form_class = CreateCreditForm
     template_name = 'open_credit.html'
-    success_url = reverse_lazy('bank_accounts')
+    success_url = reverse_lazy('credits')
 
     def form_valid(self, form):
         form.instance.credit = form.cleaned_data['credit']
         form.instance.bank_account = form.cleaned_data['bank_account']
         form.instance.status = "In progress"
         form.instance.amount = form.cleaned_data['amount']
+        form.instance.credits = Credit.objects.all()
+
+        if BankAccount.objects.filter(name=form.instance.bank_account).first().currency != Credit.objects.filter(name=form.instance.credit).first().currency:
+
+            messages.success(self.request, "Request is not accepted. Currencies of credit and bank account are different!")
+            return super().form_invalid(form)
 
         credit = form.save()
-        make_credit_transactions(credit)
 
         return super().form_valid(form)
 
@@ -67,3 +85,35 @@ class CreateCreditView(LoginRequiredMixin, CreateView):
         kwargs = super().get_form_kwargs()
         kwargs['user'] = self.request.user
         return kwargs
+
+
+class EditCreditView(LoginConfirmedRequiredMixin, UpdateView):
+    model = UserCredit
+    form_class = EditCreditForm
+    template_name = 'edit_credit.html'
+    success_url = reverse_lazy('credits')
+
+    def form_valid(self, form):
+        form.instance.bank_account = form.cleaned_data['bank_account']
+
+        if BankAccount.objects.filter(name=form.instance.bank_account).first().currency != self.object.credit.currency:
+            messages.success(self.request, "Request is not accepted. Currencies of credit and bank account are different!")
+            return self.form_invalid(form)
+
+        form.save()
+        return super().form_valid(form)
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
+    
+
+class DetailsCreditView(LoginConfirmedRequiredMixin, DetailView):
+    def get(self, request, *args, **kwargs):
+        credit_id = kwargs.get('pk')
+        payments = CreditTransaction.objects.filter(credit=credit_id, credit__status='Approved')
+        context = {
+            'payments': payments
+        }
+        return render(request, 'credit_transactions.html', context)

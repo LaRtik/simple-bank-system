@@ -11,7 +11,7 @@
 <body>
 	<header>
 		{% if request.user.is_authenticated and request.user.telegram_id != 0 and request.user.confirmed %}
-		<span>Hi {{ request.user.username | title }}</span>
+		<span>Welcome, {{ request.user.first_name | title }} ---</span>
 		<a href="{% url 'logout' %}">Logout</a>
 		<br>
 		<br>
@@ -28,20 +28,38 @@
 		{% endif %}
 		<br>
 		<br>
+		<a href="{% url 'available_credits' %}">Available credits</a>
 		<a href="{% url 'about_us' %}">About us</a>
 	</header>
 	<main>
 		{% if messages %}
 		<div class="messages">
 			{% for message in messages %}
-			<div class="alert {% if message.tags %}alert-{{ message.tags }}" {% endif %}>
+			<div class="alert">
 				{{ message }}
 			</div>
 			{% endfor %}
 		</div>
 		{% endif %}
-
+		<hr>
+		<h3>Current currency rates</h3>
+		<table>
+			<tr>
+				<th>Currency</th>
+				<th>Buying rate</th>
+				<th>Selling rate</th>
+			</tr>
+			{% for currency_relation in currency_relations %}
+			<tr>
+				<td>{{ currency_relation.currency_from }}\{{ currency_relation.currency_to }}</td>
+				<td>{{ currency_relation.coefficient_buy }}</td>
+				<td>{{ currency_relation.coefficient_sell }}</td>
+			</tr>
+			{% endfor %}
+		</table>
+		<hr>
 	</main>
+
 
 	{% block content%}
 	{% endblock content%}

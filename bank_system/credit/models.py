@@ -1,5 +1,5 @@
 from django.db import models
-from bank_account.models import BankAccount
+from bank_account.models import BankAccount, Currency
 
 COUNT = 0
 
@@ -12,6 +12,7 @@ class Credit(models.Model):
     min_amount = models.DecimalField(max_digits=12, decimal_places=2)
     max_amount = models.DecimalField(max_digits=12, decimal_places=2)
     percent = models.IntegerField()
+    currency = models.ForeignKey(Currency, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
@@ -21,7 +22,7 @@ class Credit(models.Model):
 class UserCredit(models.Model):
     credit = models.ForeignKey(Credit, on_delete=models.CASCADE)
     bank_account = models.ForeignKey(BankAccount, on_delete=models.CASCADE)
-    status = models.CharField(max_length=2, choices=[("OK", "Approved"), ("NO", "Denied"), ("W8", "In progress")])
+    status = models.CharField(max_length=16, choices=[("Approved", "Approved"), ("Denied", "Denied"), ("In progress", "In progress")])
     amount = models.DecimalField(max_digits=12, decimal_places=2)
 
     def __str__(self):
@@ -30,7 +31,7 @@ class UserCredit(models.Model):
     def save(self, *args, **kwargs):
         global COUNT
 
-        if self.status == 'OK' and not COUNT:
+        if self.status == 'Approved' and not COUNT:
             COUNT += 1
             self.bank_account.balance += self.amount
             self.bank_account.save()

@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h2>Available credits:</h2>
+<table>
+	<tr>
+		<th>Name</th>
+		<th>Desciption</th>
+		<th>Credit duration</th>
+		<th>Year percents</th>
+		<th>Minimum credit value</th>
+		<th>Maximum credit value</th>
+		<th>Currency</th>
+	</tr>
+	{% for credit in credits %}
+	<tr>
+		<td>{{ credit.name }}</td>
+		<td>{{ credit.description }}</td>
+		<td>{{ credit.period_in_month }}</td>
+		<td>{{ credit.percent }}</td>
+		<td>{{ credit.min_amount}}</td>
+		<td>{{ credit.max_amount}}</td>
+		<td>{{ credit.currency}}</td>
+	</tr>
+	{% endfor %}
+</table>
+
+{% endblock %}
