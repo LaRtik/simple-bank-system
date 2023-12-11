@@ -47,3 +47,54 @@ class TestBankAccount(TestCase):
 
         resp = self.client.post('/cabinet/create_account_transaction/', form_data, follow=True)
         assert resp.status_code == 200
+
+
+    def test_form_byn_to_usd(self):
+        form_data = {
+            'bank_account_from': self.byn_bank_account,
+            'bank_account_to': self.usd_bank_account.id,
+            'value': 100,
+        }
+        form = BankAccountTransactionForm(data=form_data, user=self.user)
+        assert form.is_valid()
+
+        resp = self.client.post('/cabinet/create_account_transaction/', form_data, follow=True)
+        assert resp.status_code == 200
+
+    
+    def test_form_usd_to_byn(self):
+        form_data = {
+            'bank_account_from': self.usd_bank_account,
+            'bank_account_to': self.byn_bank_account.id,
+            'value': 100,
+        }
+        form = BankAccountTransactionForm(data=form_data, user=self.user)
+        assert form.is_valid()
+
+        resp = self.client.post('/cabinet/create_account_transaction/', form_data, follow=True)
+        assert resp.status_code == 200
+
+    
+    def test_form_byn_to_byn_insufficient_funds(self):
+        form_data = {
+            'bank_account_from': self.byn_bank_account,
+            'bank_account_to': self.second_byn_bank_account.id,
+            'value': 10000,
+        }
+        form = BankAccountTransactionForm(data=form_data, user=self.user)
+        assert form.is_valid()
+
+        resp = self.client.post('/cabinet/create_account_transaction/', form_data, follow=True)
+        assert resp.status_code == 200
+
+    def test_form_byn_to_byn_incorrect_value(self):
+        form_data = {
+            'bank_account_from': self.byn_bank_account,
+            'bank_account_to': self.second_byn_bank_account.id,
+            'value': -100,
+        }
+        form = BankAccountTransactionForm(data=form_data, user=self.user)
+        assert not form.is_valid()
+
+        resp = self.client.post('/cabinet/create_account_transaction/', form_data, follow=True)
+        assert resp.status_code == 200
